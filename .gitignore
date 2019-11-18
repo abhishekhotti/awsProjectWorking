@@ -3,3 +3,5 @@
 awsApp/*
 
 account.py
+
+__pycache__

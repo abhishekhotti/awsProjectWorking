@@ -1,4 +1,5 @@
 import boto3
+from account import bucketName
 
 def detect_text(photo, bucket):
     client=boto3.client('rekognition')
@@ -14,7 +15,7 @@ def getSpeech(text):
     file.close()
 
 def main():
-    bucket='project1-cmpe172'
+    bucket=bucketName
     photo='75485185_2431802366937167_2306894451567493120_n.jpg'
     textInPic=detect_text(photo,bucket)
     print("Text detected: " + textInPic)
