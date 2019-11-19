@@ -19,7 +19,7 @@ def main():
     photo='75485185_2431802366937167_2306894451567493120_n.jpg'
     textInPic=detect_text(photo,bucket)
     print("Text detected: " + textInPic)
-    getSpeech(textInPic)
+    getSpeech(textInPic) 
 
 
 
