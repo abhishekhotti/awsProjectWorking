@@ -3,21 +3,15 @@
 <head>
     <link rel="shortcut icon" href= "{{ url_for('static',filename='favicon.ico') }}"/>
     <link rel= "stylesheet" type= "text/css" href= "{{ url_for('static',filename='styles.css') }}">
-	<title>Choose Option</title>
+	<title>Upload Image</title>
 </head>
 <body> 
-<button><a class="navBar" href="/chooseOne">Home</a></button>
+<button><a class="navBar" href="/">Home</a></button>
     <div class="container">  
-        <form id = 'contact' action="{{ url_for('pickedOption') }}" method="POST">
-        <h3 id = "pin">Choose Option</h3>
+        <form id = 'contact' action="{{ url_for('pickedOption') }}" method="POST" enctype="multipart/form-data">
+        <h3 id = "pin">Upload Image</h3>
         <fieldset id = "pin">
-            <input type="radio" name="pickOne" value="add_rule">  Add a Rule<br>
-        </fieldset>
-        <fieldset id = "pin">
-            <input type="radio" name="pickOne" value="remove_rule"> Delete a Rule<br>
-        </fieldset>
-        <fieldset id = "pin">
-            <input type="radio" name="pickOne" value="download_rule"> Download Rules<br>
+            Select the image with text (.png, .jpg): <input type="file" name="uploadfile" accept ="image/*"/>
         </fieldset>
         <fieldset>
             <button name="submit" type="submit" id="contact-submit">Submit</button>

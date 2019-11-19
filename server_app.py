@@ -6,6 +6,7 @@ import string
 fileNameToUse = "".join(
     random.choice(string.ascii_letters + string.digits) for i in range(12)
 )
+from account import workingDir
 
 totalVisitors = ""
 app = Flask(__name__)
@@ -23,8 +24,12 @@ def chooseOne():
 
 @app.route("/pickedOption", methods=['POST'])
 def pickedOption():
-    choice = request.form['pickOne']
-    return choice
+    fileType = request.form.get("uploadfile")
+    target = os.path.join(workingDir, "userFiles/")
+    actualFile = request.files.get("uploadfile")
+    dest = "".join([target, actualFile.filename])
+    actualFile.save(dest)
+    return "done"
 
 
 
