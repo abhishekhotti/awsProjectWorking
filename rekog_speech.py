@@ -5,7 +5,11 @@ def detect_text(photo, bucket):
     client=boto3.client('rekognition')
     response=client.detect_text(Image={'S3Object':{'Bucket':bucket,'Name':photo}})
     textDetections=response['TextDetections']
-    return textDetections[0]['DetectedText']
+    textInPic = ""
+    for item in textDetections:
+        if item.get("Type") == "WORD":
+            textInPic += item.get("DetectedText") + " "
+    return textInPic
 
 def getSpeech(text):
     polly_client = boto3.client('polly')
@@ -16,11 +20,10 @@ def getSpeech(text):
 
 def main():
     bucket=bucketName
-    photo='75485185_2431802366937167_2306894451567493120_n.jpg'
+    photo='abhiTest.jpg'
     textInPic=detect_text(photo,bucket)
-    print("Text detected: " + textInPic)
-    getSpeech(textInPic) 
-
+    #print("Text detected: " + textInPic)
+    #getSpeech(textInPic) 
 
 
 if __name__ == "__main__":

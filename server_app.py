@@ -6,8 +6,9 @@ import string
 fileNameToUse = "".join(
     random.choice(string.ascii_letters + string.digits) for i in range(12)
 )
-from account import workingDir
-
+from account import workingDir, bucketName
+from s3Upload import uploadFile2S3
+from rekog_speech import detect_text, getSpeech
 totalVisitors = ""
 app = Flask(__name__)
 
@@ -29,13 +30,19 @@ def pickedOption():
     actualFile = request.files.get("uploadfile")
     dest = "".join([target, actualFile.filename])
     actualFile.save(dest)
-    return "done"
+    url = uploadFile2S3(dest, "abhiTest.jpg")
+    text = detect_text("abhiTest.jpg", bucketName)
+    return render_template("askCorrectness.html", urlS3 = url, textToCheck = text.strip())
 
+@app.route("/submitToSpeech", methods=['POST'])
+def submitToSpeech():
+    textToTranslate = request.form['correctedText']
+    getSpeech(textToTranslate) 
+    return "done"
 
 @app.errorhandler(404)
 def error404(error):
     return render_template("error404.html")
-
 
 @app.errorhandler(500)
 def error500(error):

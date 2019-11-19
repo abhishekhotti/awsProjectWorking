@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <link rel="shortcut icon" href= "{{ url_for('static',filename='favicon.ico') }}"/>
+    <link rel= "stylesheet" type= "text/css" href= "{{ url_for('static',filename='styles.css') }}">
+	<title>Upload Image</title>
+</head>
+<body> 
+<button><a class="navBar" href="/">Home</a></button>
+<br>
+    <div style=" text-align: center;">  
+        <img src = {{ urlS3 }} style = "height: 300px;"></img>
+    </div>
+        <div class = "container">
+        <form id = 'contact' action="{{ url_for('submitToSpeech') }}" method="POST" enctype="multipart/form-data">
+        <h3 id = "pin">Verify</h3>
+        <fieldset id = "pin">
+                <textarea rows="4" cols="50" name = "correctedText">{{textToCheck}}</textarea>
+        </fieldset>
+        <fieldset>
+            <button name="submit" type="submit" id="contact-submit">Submit</button>
+        </fieldset>
+      </form>
+    </div>
+</body>
