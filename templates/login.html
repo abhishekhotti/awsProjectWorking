@@ -1,0 +1,36 @@
+<!DOCTYPE html> 
+<html> 
+<head> 
+    <link rel="shortcut icon" href= "{{ url_for('static',filename='favicon.ico') }}"/> 
+    <link rel= "stylesheet" type= "text/css" href= "{{ url_for('static',filename='styles.css') }}"> 
+    <title>Choose Option</title> 
+</head> 
+<body>  
+<button><a class="navBar" href="/">Home</a></button> 
+{% if failure == "fail" %} 
+<div id = "contact"> 
+    <h2 class = "alert"> 
+        <b> 
+            Login Failed, please try again 
+        </b> 
+    </h2> 
+</div> 
+{% endif %} 
+    <div class="container"> 
+        <div id= "contact"> 
+            <form action="{{ url_for('loginPage') }}" method="POST"> 
+                <h3 id = "pin">Login Credentials</h3> 
+                <fieldset id = "pin"> 
+                    <input type="text" name="username" placeholder="Username"> 
+                </fieldset> 
+                <fieldset> 
+                    <input type="password" name="psw" placeholder="Password"> 
+                </fieldset> 
+                <fieldset> 
+                    <button name="submit" type="submit" id="contact-submit">Submit</button> 
+                </fieldset> 
+            </form> 
+            <a href="/signUp"><button type="submit">SignUp</button></a> 
+        </div> 
+    </div> 
+</body> 

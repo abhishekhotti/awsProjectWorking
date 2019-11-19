@@ -1,27 +1,47 @@
-import boto3
-from account import bucketName
+from flask import Flask, render_template, request, send_file, redirect, url_for
+import os
+import time
+import random
+import string
+fileNameToUse = "".join(
+    random.choice(string.ascii_letters + string.digits) for i in range(12)
+)
 
-def detect_text(photo, bucket):
-    client=boto3.client('rekognition')
-    response=client.detect_text(Image={'S3Object':{'Bucket':bucket,'Name':photo}})
-    textDetections=response['TextDetections']
-    return textDetections[0]['DetectedText']
+totalVisitors = ""
+app = Flask(__name__)
 
-def getSpeech(text):
-    polly_client = boto3.client('polly')
-    response = polly_client.synthesize_speech(VoiceId='Joanna', OutputFormat='mp3', Text = text)
-    file = open('/Users/ahotti/Desktop/speech.mp3', 'wb')
-    file.write(response['AudioStream'].read())
-    file.close()
+# fileNameToUse = ''.join(random.choice(string.ascii_letters + string.digits) for i in range(12))
+# workingDir = /Users/abhishekhotti/Desktop/SnapShot_Analyzer
 
-def main():
-    bucket=bucketName
-    photo='75485185_2431802366937167_2306894451567493120_n.jpg'
-    textInPic=detect_text(photo,bucket)
-    print("Text detected: " + textInPic)
-    getSpeech(textInPic)
+@app.route("/")
+def index():
+    return redirect(url_for("chooseOne"))
 
+@app.route("/chooseOne")
+def chooseOne():
+    return render_template("chooseOne.html")
+
+@app.route("/pickedOption", methods=['POST'])
+def pickedOption():
+    choice = request.form['pickOne']
+    return choice
+
+
+
+@app.errorhandler(404)
+def error404(error):
+    return render_template("error404.html")
+
+
+@app.errorhandler(500)
+def error500(error):
+    return render_template("reportError.html")
+
+
+@app.errorhandler(405)
+def error405(error):
+    return render_template("error404.html")
 
 
 if __name__ == "__main__":
-    main()
+    app.run(debug=True)

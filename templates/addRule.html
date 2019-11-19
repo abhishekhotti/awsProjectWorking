@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <link rel="shortcut icon" href= "{{ url_for('static',filename='favicon.ico') }}"/>
+    <link rel="stylesheet" href= "{{ url_for('static',filename='styles.css') }}"/>
+	<title>Add a Rule</title>
+    <script>
+    function validate(form)
+    {
+        val = checkIfEnter(form.removeMe.value, form.IDfield.value)
+        if(val == "")
+            return true
+        else
+        {
+            alert(val);
+            return false;
+        }
+    }
+    function checkIfEnter(removeMe, IDfield)
+    {
+        if (removeMe == "" && IDfield == "")
+        {return ""}
+        else if (removeMe != "" && IDfield != "")
+        {
+            if (removeMe.includes(IDfield))
+            {
+                return ""
+            }
+            else
+            {
+                return "Please include the ID-Field + indentifying information"
+            }
+            return ""
+        }
+        else
+        {return "You entered one field but not the other"}
+    }
+	</script>
+</head>
+<body>
+<button><a class="navBar" href="/chooseOne">Home</a></button>
+<div class="containerMod">
+  <form id = 'contact' action="{{ url_for('addRuleCompute') }}" enctype = "multipart/form-data" method="POST" onsubmit = "return validate(this);">
+    <h3>Add a rule to the parser!</p></h3>
+    <h4 class = "alert">CHARACTER SENSITIVE (include spaces, special characters, everything)</h4>
+    <fieldset><p>Copy/Paste the whole line </p>
+        <textarea placeholder= "00652,09 2019/09/09 15:20:05.691 5 UserName Pulse.exe Pulse p18416 t1B94 pluginListener.cpp:1308 - 'JamUI' UiPlugin-PostJob xid = 10, kPromptAllowSave = 0, kPromptLoginName = '', kPromptServerName = '32. EMEA (via Banganlore)', kPromptSSID = '', kPromptServerURL = '23.3.983.3', kPromptServerType = 'ive', kPromptConnectionId = 'this-is-a-valid-connection'" name="wholeLine" autofocus required style="text-align: unset;"></textarea>
+    </fieldset>
+    <fieldset>
+        <p>What is unique to the line? </p>
+        <input placeholder="Ex: UiPlugin-PostJob" type="text" name="uniqueness" required style="text-align: unset;">
+    </fieldset>
+    <div id = "contact2">
+    <h2> Optional </h2>
+        <fieldset>
+            <p>What is the field? (If empty, then I will hide everything after unique line identifier)</p>
+            <input placeholder="Ex: kPromptConnectionId" type="text" style="text-align: unset;" name="IDfield">
+        </fieldset>
+        <fieldset>
+            <p>What is the indentifying information? (Copy/Paste exactly)</p>
+            <input placeholder="Ex: kPromptConnectionId = 'this-is-a-valid-connection'" style="text-align: unset;" type="text" name="removeMe">
+        </fieldset>
+    </div>
+    <fieldset>
+        <button name="submit" type="submit" id="contact-submit">Submit</button>
+    </fieldset>
+    </fieldset>
+  </form>
+</div>
+
+</body>
+</html>

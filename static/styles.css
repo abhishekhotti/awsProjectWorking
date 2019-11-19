@@ -1,0 +1,337 @@
+* { 
+    margin: 0; 
+    padding: 0; 
+    box-sizing: border-box; 
+    -webkit-box-sizing: border-box; 
+    -moz-box-sizing: border-box; 
+    -webkit-font-smoothing: antialiased; 
+    -moz-font-smoothing: antialiased; 
+    -o-font-smoothing: antialiased; 
+    text-rendering: optimizeLegibility; 
+  } 
+   
+  textarea[contenteditable] { 
+    max-height: 200px; 
+    overflow: auto; 
+  } 
+   
+  ol { 
+    display: block; 
+    margin-block-start: 0px; 
+    margin-block-end: 0px; 
+    margin-inline-start: 0px; 
+    margin-inline-end: 0px; 
+    padding-inline-start: 40px; 
+  } 
+  ul { 
+    display: block; 
+    margin-block-start: 0px; 
+    margin-block-end: 0px; 
+    margin-inline-start: 0px; 
+    margin-inline-end: 0px; 
+    padding-inline-start: 40px; 
+  } 
+  body { 
+    font-family: "Roboto", Helvetica, Arial, sans-serif; 
+    font-weight: 100; 
+    font-size: 12px; 
+    line-height: 30px; 
+    color: #777; 
+    background: #4caf50; 
+  } 
+   
+  .container { 
+    max-width: 400px; 
+    width: 100%; 
+    margin: 0 auto; 
+    position: relative; 
+  } 
+   
+  .containerMod { 
+    max-width: 600px; 
+    width: 100%; 
+    margin: 0 auto; 
+    position: relative; 
+  } 
+   
+  #contact input[type="text"], 
+  #contact input[type="password"], 
+  #contact input[type="email"], 
+  #contact input[type="tel"], 
+  #contact input[type="url"], 
+  #contact input[type="button"], 
+  #contact textarea, 
+  #contact button[type="submit"] { 
+    font: 400 12px/16px "Roboto", Helvetica, Arial, sans-serif; 
+  } 
+   
+  #contact #insertServer { 
+    width: auto; 
+    color: #f44336; 
+    margin: 0px; 
+    display: inline-block; 
+  } 
+   
+  #inputFile { 
+    max-width: 50%; 
+  } 
+   
+  #contact { 
+    background: #f9f9f9; 
+    padding: 25px; 
+    margin: 50px 0; 
+    box-shadow: 0 0 20px 0 rgba(0, 0, 0, 0.2), 0 5px 5px 0 rgba(0, 0, 0, 0.24); 
+  } 
+   
+  #contact2 { 
+    background: #f9f9f9; 
+    padding: 25px; 
+    margin-bottom: 15px;
+    box-shadow: 0 0 20px 0 rgba(0, 0, 0, 0.2), 0 5px 5px 0 rgba(0, 0, 0, 0.24); 
+  } 
+   
+  #contact h3 { 
+    display: block; 
+    font-size: 30px; 
+    font-weight: 300; 
+    margin-bottom: 10px; 
+  } 
+   
+  #contact h4 { 
+    margin: 5px 0 15px; 
+    display: block; 
+    font-size: 13px; 
+    font-weight: 400; 
+  } 
+   
+  fieldset { 
+    border: medium none !important; 
+    margin: 0 0 10px; 
+    min-width: 100%; 
+    padding: 0; 
+    width: 100%; 
+  } 
+   
+  #biggerSize { 
+    display: grid; 
+    grid-template-columns: fit-content(300px) fit-content(300px) 1fr; 
+  } 
+   
+  /* Style the buttons that are used to open and close the accordion panel */ 
+  .accordion { 
+    background-color: #eee; 
+    color: #444; 
+    cursor: pointer; 
+    padding: 18px; 
+    width: 100%; 
+    text-align: left; 
+    border: none; 
+    outline: none; 
+    transition: 0.4s; 
+  } 
+   
+  /* Add a background color to the button if it is clicked on (add the .active class with JS), and when you move the mouse over it (hover) */ 
+  .active, 
+  .accordion:hover { 
+    background-color: #ccc; 
+  } 
+   
+  .accordion:after { 
+    content: "\02795"; /* Unicode character for "plus" sign (+) */ 
+    font-size: 13px; 
+    color: #777; 
+    float: right; 
+    margin-left: 5px; 
+  } 
+   
+  .active:after { 
+    content: "\2796"; /* Unicode character for "minus" sign (-) */ 
+  } 
+   
+  /* Style the accordion panel. Note: hidden by default */ 
+  .panel { 
+    padding: 0 18px; 
+    background-color: white; 
+    max-height: 0; 
+    overflow: hidden; 
+    transition: max-height 0.2s ease-out; 
+  } 
+   
+  ul { 
+    list-style-type: none; 
+    margin: 0; 
+    padding: 0; 
+    overflow: hidden; 
+    border: 1px solid #e7e7e7; 
+    background-color: #4caf50; 
+  } 
+   
+  li { 
+    float: left; 
+  } 
+   
+  li a { 
+    display: block; 
+    color: #666; 
+    text-align: center; 
+    padding: 14px 16px; 
+    text-decoration: none; 
+  } 
+   
+  li a.active { 
+    color: white; 
+    background-color: #4caf50; 
+  } 
+   
+  #container > div { 
+    background-color: #8ca0ff; 
+    padding: 5px; 
+  } 
+  #giveSpace { 
+    padding-right: 10px; 
+  } 
+  #giveSpaceTop { 
+    padding-right: 42px; 
+  } 
+  #makeItSame { 
+    padding-left: 50px; 
+  } 
+  #makeItSame2 { 
+    text-align: center; 
+  } 
+  #pin { 
+    text-align: center; 
+  } 
+   
+  #contact input[type="text"], 
+  #contact input[type="password"], 
+  #contact input[type="email"], 
+  #contact input[type="tel"], 
+  #contact input[type="url"], 
+  #contact input[type="password"], 
+  #contact textarea { 
+    width: 100%; 
+    border: 1px solid #ccc; 
+    background: #fff; 
+    text-align: center; 
+    margin: 0 0 5px; 
+    padding: 10px; 
+    display: block; 
+  } 
+   
+  #contact input[type="text"]:hover, 
+  #contact input[type="email"]:hover, 
+  #contact input[type="tel"]:hover, 
+  #contact input[type="url"]:hover, 
+  #contact textarea:hover { 
+    -webkit-transition: border-color 0.3s ease-in-out; 
+    -moz-transition: border-color 0.3s ease-in-out; 
+    transition: border-color 0.3s ease-in-out; 
+    border: 1px solid #aaa; 
+  } 
+   
+  #contact #biggerText { 
+    height: 500px; 
+    max-width: 100%; 
+    resize: none; 
+  } 
+   
+  #contact textarea { 
+    height: 100px; 
+    max-width: 100%; 
+    resize: none; 
+  } 
+  #contact input[type="button"], 
+  #contact button[type="button"], 
+  #contact button[type="submit"] { 
+    cursor: pointer; 
+    width: 100%; 
+    border: none; 
+    background: #4caf50; 
+    color: #fff; 
+    margin: 0 0 5px; 
+    padding: 10px; 
+    font-size: 15px; 
+  } 
+   
+  .button { 
+    cursor: pointer; 
+    border: none; 
+    background: #4caf50; 
+    color: #fff; 
+    margin: 0 0 5px; 
+    padding: 10px; 
+    font-size: 15px; 
+    text-decoration: none; 
+  } 
+   
+  .alert { 
+    background-color: #f44336; 
+    color: white; 
+    text-align: center; 
+    font-size: 10px; 
+  } 
+   
+  .alert-good { 
+    background-color: #4caf50; 
+    color: white; 
+    text-align: center; 
+    font-size: 10px; 
+    width: fit-content; 
+    padding: 5px 30px; 
+  } 
+   
+  .alert-bad { 
+    background-color: #f44336; 
+    color: white; 
+    text-align: center; 
+    font-size: 10px; 
+    width: fit-content; 
+    padding: 5px 30px; 
+  } 
+   
+  .navBar { 
+    background-color: gray; 
+    color: white; 
+    text-align: center; 
+    font-size: 20px; 
+    width: fit-content; 
+    padding: 5px 30px; 
+    text-decoration: none; 
+  } 
+   
+  #contact button[type="submit"]:hover { 
+    background: #43a047; 
+    -webkit-transition: background 0.3s ease-in-out; 
+    -moz-transition: background 0.3s ease-in-out; 
+    transition: background-color 0.3s ease-in-out; 
+  } 
+   
+  #contact button[type="submit"]:active { 
+    box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.5); 
+  } 
+  .copyright { 
+    text-align: center; 
+  } 
+   
+  #contact input:focus, 
+  #contact textarea:focus { 
+    outline: 0; 
+    border: 1px solid #aaa; 
+  } 
+   
+  ::-webkit-input-placeholder { 
+    color: #888; 
+  } 
+   
+  :-moz-placeholder { 
+    color: #888; 
+  } 
+   
+  ::-moz-placeholder { 
+    color: #888; 
+  } 
+   
+  :-ms-input-placeholder { 
+    color: #888; 
+  } 

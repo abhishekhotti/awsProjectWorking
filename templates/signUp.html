@@ -1,0 +1,35 @@
+<!DOCTYPE html> 
+<html> 
+<head> 
+    <link rel="shortcut icon" href= "{{ url_for('static',filename='favicon.ico') }}"/> 
+    <link rel= "stylesheet" type= "text/css" href= "{{ url_for('static',filename='styles.css') }}"> 
+    <title>Choose Option</title> 
+</head> 
+<body>  
+<button><a class="navBar" href="/">Home</a></button> 
+{% if username != "" %} 
+<div id = "contact"> 
+    <h1 class = "alert"> 
+        <b> 
+            Sorry, {{username}} is taken 
+        </b> 
+    </h1> 
+</div> 
+{% endif %} 
+    <div class="container"> 
+        <div id= "contact"> 
+            <form action="{{ url_for('signUpAdd') }}" method="POST"> 
+                <h3 id = "pin">Sign Up</h3> 
+                <fieldset id = "pin"> 
+                    <input type="text" name="username" placeholder="Username"> 
+                </fieldset> 
+                <fieldset> 
+                    <input type="password" name="psw" placeholder="Password"> 
+                </fieldset> 
+                <fieldset> 
+                    <button name="submit" type="submit" id="contact-submit">Submit</button> 
+                </fieldset> 
+            </form> 
+        </div> 
+    </div> 
+</body>
