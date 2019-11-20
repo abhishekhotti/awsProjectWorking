@@ -51,7 +51,7 @@ def convertToLanguage():
     translation = getTranslation(englishText, supportedLanguages.get(convertLang))
     return render_template("translatedText.html", textToTranslate = englishText, translatedText = translation, choice = convertLang)
 
-@app.route("/pickBetaOption", methods=["POST"])
+@app.route("/pickBetaOption", methods=["POST"]) 
 def pickBetaOption():
     choice = request.form['pickOne']
     if choice == "translate":
