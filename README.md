@@ -1,8 +1,12 @@
 # awsProjectWorking
 University Name: http://www.sjsu.edu/ (Links to an external site.)
+
 Course: Enterprise Software (Links to an external site.)
+
 Professor Sanjay Garje (Links to an external site.) (This is link to LinkedIn Profile)
+
 Student: Abhishek Hotti and Moo Jin Park
+
 Application:
 1) Recognize text in an image
 2) Read out text from image
