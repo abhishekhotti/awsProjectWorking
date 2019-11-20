@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <link rel="shortcut icon" href= "{{ url_for('static',filename='favicon.ico') }}"/>
+    <link rel= "stylesheet" type= "text/css" href= "{{ url_for('static',filename='styles.css') }}">
+	<title>Upload Image</title>
+</head>
+<script>
+    document.onreadystatechange = function () {
+    if (document.readyState == "complete") {
+     var setLangTo = document.getElementById("conversionLang").value
+     document.getElementById("convertInto").value = setLangTo;
+   }
+ }
+</script>
+
+<body> 
+<button><a class="navBar" href="/">Home</a></button>
+<br>
+        <div class = "container">
+        <form id = 'contact' action="{{ url_for('verificationStep') }}" method="POST" enctype="multipart/form-data">
+        <input type="hidden" id="conversionLang" name = "conversionLanguage" value= {{choice}}>
+        <h3 id = "pin">Translation Service</h3>
+        <fieldset id = "pin">
+            <p style="text-align: left;">Type your ENGLISH sentence below:
+                <textarea style="text-align: left;" disabled placeholder = "Type your ENGLISH sentence here...." name="englishText">{{textToTranslate}}
+                </textarea>
+            </p>
+        </fieldset>
+        <fieldset id = "pin">
+            <p style="text-align: left;">What language would you like to translate into?
+                <select name="convertInto" disabled id="convertInto">
+                    <option name = "languageChoice" value = "arabic"> Arabic</option>
+                    <option name = "languageChoice" value = "chinese"> Chinese</option>
+                    <option name = "languageChoice" value = "hindi"> Hindi</option>
+                    <option name = "languageChoice" value = "italian"> Italian</option>
+                </select>
+            </p>
+        </fieldset>
+        <fieldset id = "pin">
+            <p style="text-align: left;">Your translated sentence below:
+                <textarea style="text-align: left;" placeholder = "Your converted text" readonly name="convertedText"> {{translatedText}}
+                </textarea>
+            </p>
+        </fieldset>
+        <fieldset>
+            <button name="submit" type="submit" id="contact-submit">Submit</button>
+        </fieldset>
+      </form>
+      
+    </div>
+</body>

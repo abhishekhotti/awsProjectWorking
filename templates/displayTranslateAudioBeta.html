@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <link rel="shortcut icon" href= "{{ url_for('static',filename='favicon.ico') }}"/>
+    <link rel= "stylesheet" type= "text/css" href= "{{ url_for('static',filename='styles.css') }}">
+	<title>Audio File</title>
+</head>
+<body> 
+<button><a class="navBar" href="/">Home</a></button>
+<br>
+    <div class = "container">
+    <form id = 'contact' action="{{ url_for('downloadMP3') }}" method="POST" enctype="multipart/form-data">
+        <h3 id = "pin">Verify</h3>
+        <audio controls src = '/templates/t-rex-roar.mp3' type="audio/mpeg"></audio>
+        <fieldset>
+            <button name="submit" type="submit" id="contact-submit">Download MP3 File</button>
+        </fieldset>
+      </form> 
+    </div>
+</body>

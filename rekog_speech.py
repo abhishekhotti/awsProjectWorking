@@ -1,5 +1,5 @@
 import boto3
-from account import bucketName
+from account import bucketName, workingDir
 
 def detect_text(photo, bucket):
     client=boto3.client('rekognition')
@@ -11,12 +11,17 @@ def detect_text(photo, bucket):
             textInPic += item.get("DetectedText") + " "
     return textInPic
 
-def getSpeech(text):
+def getSpeech(text, voiceActor):
     polly_client = boto3.client('polly')
-    response = polly_client.synthesize_speech(VoiceId='Joanna', OutputFormat='mp3', Text = text)
-    file = open('/Users/ahotti/Desktop/speech.mp3', 'wb')
+    response = polly_client.synthesize_speech(VoiceId= voiceActor, OutputFormat='mp3', Text = text)
+    file = open(workingDir + "/userFiles/speech.mp3", 'wb')
     file.write(response['AudioStream'].read())
     file.close()
+
+def getTranslation(text, countryCode):
+    translate = boto3.client(service_name='translate', region_name='us-west-2', use_ssl=True)
+    result = translate.translate_text(Text=text, SourceLanguageCode="en", TargetLanguageCode= countryCode)
+    return result.get('TranslatedText')
 
 def main():
     bucket=bucketName
