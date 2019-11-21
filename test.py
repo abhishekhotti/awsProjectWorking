@@ -7,14 +7,19 @@ import requests
 transcribe = boto3.client('transcribe')
 
 job_name = "translateTests"
-job_uri = "https://project1-cmpe172.s3-us-west-2.amazonaws.com/speech.mp3"
+job_uri = "https://project1-cmpe172.s3-us-west-2.amazonaws.com/trevor_trump.mp3"
 
 transcribe.start_transcription_job(
     TranscriptionJobName=job_name,
     Media={'MediaFileUri': job_uri},
     MediaFormat='mp3',
-    LanguageCode='en-US'
-
+    LanguageCode='en-US',
+    Settings = 
+    {
+        "ShowSpeakerLabels": True,
+        "MaxSpeakerLabels": 2,
+    }
+    
 )
 
 def download_file(url, file_path):
@@ -31,5 +36,5 @@ while True:
     print("Not ready yet...")
     time.sleep(5)
 urlPath = status.get('TranscriptionJob').get('Transcript').get('TranscriptFileUri')
-download_file(urlPath, "/Users/ahotti/Desktop/aws/userFiles/speech.txt")
+download_file(urlPath, "/Users/ahotti/Desktop/aws/userFiles/speech.json")
 transcribe.delete_transcription_job(TranscriptionJobName=job_name)
