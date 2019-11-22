@@ -15,12 +15,12 @@ def detect_text(photo, bucket):
     return textInPic
 
 
-def getSpeech(text, voiceActor):
+def getSpeech(text, voiceActor, FileNameToUse):
     polly_client = boto3.client("polly", region_name="us-west-2")
     response = polly_client.synthesize_speech(
         VoiceId=voiceActor, OutputFormat="mp3", Text=text
     )
-    file = open(workingDir + "/static/speech.mp3", "wb")
+    file = open(workingDir + "/static/"+FileNameToUse+".mp3", "wb")
     file.write(response["AudioStream"].read())
     file.close()
 

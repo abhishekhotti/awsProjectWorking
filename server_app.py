@@ -4,9 +4,7 @@ import time
 import random
 import string
 
-fileNameToUse = "".join(
-    random.choice(string.ascii_letters + string.digits) for i in range(12)
-)
+fileNameToUse = ""
 from account import workingDir, bucketName
 from s3Upload import uploadFile2S3
 from awsFunctions import detect_text, getSpeech, getTranslation, transcribeAudioFile, identifySpeakers
@@ -21,13 +19,15 @@ app = Flask(__name__)
 
 @app.route("/")
 def index():
-    now = time.time()
+    for subdir, dirs, files in os.walk(workingDir+"/static/"):
+        for file in files:
+            if file.endswith(".mp3"):
+                os.remove(workingDir+"/static/"+file)
     for subdir, dirs, files in os.walk(workingDir+"/userFiles/"):
         for file in files:
-            if file == "counter.txt":
-                continue
-            filepath = subdir + os.sep + file
-            os.remove(filepath)
+            os.remove(workingDir+"/userFiles/"+file)
+    global fileNameToUse
+    fileNameToUse = "".join(random.choice(string.ascii_letters + string.digits) for i in range(12))
     return redirect(url_for("chooseOne"))
 
 
@@ -156,20 +156,19 @@ def submitToSpeech():
     textToTranslate = request.form["correctedText"]
     global url
     url = request.form['s3URL']
-    getSpeech(textToTranslate, "Joanna")
+    getSpeech(textToTranslate, "Joanna", fileNameToUse)
     return redirect(url_for("displayAudio"))
 
 
 @app.route("/downloadMP3", methods=["POST"])
 def downloadMP3():
-    return send_file(workingDir + "/userFiles/speech.mp3", as_attachment=True)
+    return send_file(workingDir + "/static/"+fileNameToUse+".mp3", as_attachment=True)
 
 
 @app.route("/displayAudio")
 def displayAudio():
-    print(url)
     return render_template(
-        "displayAudio.html", urlS3=url, audioFile=workingDir + "/userFiles/speech.mp3"
+        "displayAudio.html", urlS3=url, audioFile=fileNameToUse+".mp3"
     )
 
 
