@@ -54,7 +54,7 @@ def transcribe():
 def displayAudioBeta():
     print("here")
     return render_template(
-        "displayTranslateAudioBeta.html", audioFile=workingDir + "/userFiles/speech.mp3"
+        "displayTranslateAudioBeta.html", audioFile=fileNameToUse+".mp3"
     )
 
 
@@ -73,7 +73,7 @@ def verificationStep():
     }
     convertedText = request.form["convertedText"]
     convertLang = request.form["conversionLanguage"]
-    getSpeech(convertedText, supportedVoices.get(convertLang))
+    getSpeech(convertedText, supportedVoices.get(convertLang), fileNameToUse)
     return redirect(url_for("displayAudioBeta"))
 
 @app.route("/beta/downloadTranscript", methods=["POST"])
