@@ -9,9 +9,10 @@ fileNameToUse = "".join(
 )
 from account import workingDir, bucketName
 from s3Upload import uploadFile2S3
-from awsFunctions import detect_text, getSpeech, getTranslation, transcribe
+from awsFunctions import detect_text, getSpeech, getTranslation, transcribeAudioFile, identifySpeakers
 
 url = ""
+totalConvo = ""
 app = Flask(__name__)
 
 # fileNameToUse = ''.join(random.choice(string.ascii_letters + string.digits) for i in range(12))
@@ -20,6 +21,13 @@ app = Flask(__name__)
 
 @app.route("/")
 def index():
+    now = time.time()
+    for subdir, dirs, files in os.walk(workingDir+"/userFiles/"):
+        for file in files:
+            if file == "counter.txt":
+                continue
+            filepath = subdir + os.sep + file
+            os.remove(filepath)
     return redirect(url_for("chooseOne"))
 
 
@@ -28,7 +36,7 @@ def chooseOne():
     return render_template("chooseOne.html")
 
 
-@app.route("/beta")
+@app.route("/beta/")
 def beta():
     return render_template("beta.html")
 
@@ -44,6 +52,7 @@ def transcribe():
 
 @app.route("/beta/translateAudioDownload/")
 def displayAudioBeta():
+    print("here")
     return render_template(
         "displayTranslateAudioBeta.html", audioFile=workingDir + "/userFiles/speech.mp3"
     )
@@ -67,6 +76,9 @@ def verificationStep():
     getSpeech(convertedText, supportedVoices.get(convertLang))
     return redirect(url_for("displayAudioBeta"))
 
+@app.route("/beta/downloadTranscript", methods=["POST"])
+def downloadTranscript():
+    return send_file(workingDir+"/userFiles/downTranscript.txt", as_attachment=True)
 
 @app.route("/beta/transcribeAudio", methods=["POST"])
 def transcribeAudio():
@@ -77,8 +89,20 @@ def transcribeAudio():
     actualFile.save(dest)
     global url 
     url = uploadFile2S3(dest, "abhiTest.mp3")
-    transcribe(url, "en-US")
-    return dest
+    transcribeAudioFile(url, "en-US")
+    global totalConvo
+    totalConvo = identifySpeakers()
+    with open(workingDir+"/userFiles/downTranscript.txt", "w+") as writeFile:
+        writeFile.write(totalConvo)
+    return redirect(url_for("displayTranscript"))
+
+@app.route("/beta/transcript")
+def displayTranscript():
+    global totalConvo
+    totalConvo = totalConvo.split("\n")
+    for index, value in enumerate(totalConvo):
+        totalConvo[index] = value.split(":")
+    return render_template("displayTranscript.html", speakerNotes = totalConvo, transcript= workingDir+"/userFiles/downTranscript.txt")
 
 @app.route("/beta/convertToLanguage", methods=["POST"])
 def convertToLanguage():

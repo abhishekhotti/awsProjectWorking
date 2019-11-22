@@ -31,15 +31,20 @@ def download_file(url, file_path):
                 if chunk:
                     file.write(chunk)
 
-def transcribe(s3URL, lang):
+def transcribeAudioFile(s3URL, lang):
     transcribe = boto3.client('transcribe', region_name="us-west-2")
     job_name = "translateTests"
-    job_uri = s3URL
+    job_uri = "https://project1-cmpe172.s3-us-west-2.amazonaws.com/abhiTest.mp3"
     transcribe.start_transcription_job(
         TranscriptionJobName=job_name,
         Media={'MediaFileUri': job_uri},
         MediaFormat='mp3',
-        LanguageCode= lang
+        LanguageCode= lang,
+        Settings = 
+        {
+            "ShowSpeakerLabels": True,
+            "MaxSpeakerLabels": 2,
+        }
     )
     while True:
         status = transcribe.get_transcription_job(TranscriptionJobName=job_name)
@@ -83,6 +88,7 @@ def identifySpeakers():
             totalStatement += wordInQ + " "
         else:
             totalStatement += wordInQ+" "
+    return totalStatement
 
 def getTranslation(text, countryCode):
     translate = boto3.client(

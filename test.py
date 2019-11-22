@@ -7,7 +7,8 @@ import requests
 transcribe = boto3.client('transcribe')
 
 job_name = "translateTests"
-job_uri = "https://project1-cmpe172.s3-us-west-2.amazonaws.com/trevor_trump.mp3"
+job_uri = "https://project1-cmpe172.s3.amazonaws.com/abhiTest.mp3?AWSAccessKeyId=AKIAUMSVL4LQ6GTC64DU&Signature=P7eoYVqQiQ3IVmY35Keu3vK0AsQ%3D&Expires=1574416657"
+
 
 transcribe.start_transcription_job(
     TranscriptionJobName=job_name,

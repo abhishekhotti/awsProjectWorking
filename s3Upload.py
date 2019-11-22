@@ -14,7 +14,7 @@ def uploadFile2S3(filePath, saveFileAs):
         ClientMethod="get_object",
         Params={"Bucket": "project1-cmpe172", "Key": saveFileAs},
     )
-    return url
+    return "https://project1-cmpe172.s3.amazonaws.com/"+saveFileAs
 
 
 # SOURCE_FILENAME = '/Users/ahotti/Desktop/75485185_2431802366937167_2306894451567493120_n.jpg'

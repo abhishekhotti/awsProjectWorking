@@ -10,6 +10,27 @@
     text-rendering: optimizeLegibility; 
   } 
    
+
+  table {
+    font-family: arial, sans-serif;
+    border-collapse: collapse;
+    width: 100%;
+  }
+  
+  td, th {
+    border: 1px solid black;
+    text-align: left;
+    padding: 8px;
+    font-size: 12px;
+  }
+  
+  tr:nth-child(even) {
+    background-color: white;
+  }
+  tr:nth-child(odd) {
+    background-color: #dddddd;
+  }
+
   textarea[contenteditable] { 
     max-height: 200px; 
     overflow: auto; 
@@ -48,7 +69,7 @@
   } 
    
   .containerMod { 
-    max-width: 600px; 
+    max-width: 800px; 
     width: 100%; 
     margin: 0 auto; 
     position: relative; 
@@ -79,7 +100,6 @@
   #contact { 
     background: #f9f9f9; 
     padding: 25px; 
-    margin: 50px 0; 
     box-shadow: 0 0 20px 0 rgba(0, 0, 0, 0.2), 0 5px 5px 0 rgba(0, 0, 0, 0.24); 
   } 
    
