@@ -9,7 +9,7 @@ fileNameToUse = "".join(
 )
 from account import workingDir, bucketName
 from s3Upload import uploadFile2S3
-from rekog_speech import detect_text, getSpeech, getTranslation
+from awsFunctions import detect_text, getSpeech, getTranslation, transcribe
 
 url = ""
 app = Flask(__name__)
@@ -37,6 +37,10 @@ def beta():
 def translate():
     return render_template("translate.html")
 
+@app.route("/beta/transcribe/")
+def transcribe():
+    return render_template("transcribe.html")
+
 
 @app.route("/beta/translateAudioDownload/")
 def displayAudioBeta():
@@ -63,6 +67,18 @@ def verificationStep():
     getSpeech(convertedText, supportedVoices.get(convertLang))
     return redirect(url_for("displayAudioBeta"))
 
+
+@app.route("/beta/transcribeAudio", methods=["POST"])
+def transcribeAudio():
+    fileType = request.form.get("uploadfile")
+    target = os.path.join(workingDir, "userFiles/")
+    actualFile = request.files.get("uploadfile")
+    dest = "".join([target, actualFile.filename])
+    actualFile.save(dest)
+    global url 
+    url = uploadFile2S3(dest, "abhiTest.mp3")
+    transcribe(url, "en-US")
+    return dest
 
 @app.route("/beta/convertToLanguage", methods=["POST"])
 def convertToLanguage():
@@ -93,7 +109,8 @@ def pickBetaOption():
     choice = request.form["pickOne"]
     if choice == "translate":
         return redirect(url_for("translate"))
-    print(choice)
+    elif choice == "transcribe":
+        return redirect(url_for("transcribe"))
     return choice
 
 
@@ -113,6 +130,8 @@ def pickedOption():
 @app.route("/submitToSpeech", methods=["POST"])
 def submitToSpeech():
     textToTranslate = request.form["correctedText"]
+    global url
+    url = request.form['s3URL']
     getSpeech(textToTranslate, "Joanna")
     return redirect(url_for("displayAudio"))
 
@@ -124,6 +143,7 @@ def downloadMP3():
 
 @app.route("/displayAudio")
 def displayAudio():
+    print(url)
     return render_template(
         "displayAudio.html", urlS3=url, audioFile=workingDir + "/userFiles/speech.mp3"
     )

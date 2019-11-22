@@ -14,10 +14,11 @@
         <div class = "container">
         <form id = 'contact' action="{{ url_for('downloadMP3') }}" method="POST" enctype="multipart/form-data">
         <h3 id = "pin">Verify</h3>
-        <audio controls src = '/templates/t-rex-roar.mp3' type="audio/mpeg"></audio>
+        <audio controls src="{{ url_for('static', filename='speech.mp3') }}" type="audio/mp3"></audio>
         <fieldset>
             <button name="submit" type="submit" id="contact-submit">Download MP3 File</button>
         </fieldset>
       </form> 
     </div>
 </body>
+</html>

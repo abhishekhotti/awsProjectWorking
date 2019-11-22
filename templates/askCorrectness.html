@@ -14,6 +14,7 @@
         <div class = "container">
         <form id = 'contact' action="{{ url_for('submitToSpeech') }}" method="POST" enctype="multipart/form-data">
         <h3 id = "pin">Verify</h3>
+        <input type="hidden"  name="s3URL" value= {{ urlS3 }}>
         <fieldset id = "pin">
                 <textarea rows="4" cols="50" name = "correctedText">{{textToCheck}}</textarea>
         </fieldset>
