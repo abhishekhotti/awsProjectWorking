@@ -12,7 +12,7 @@ def uploadFile2S3(filePath, saveFileAs):
 
     url = S3.generate_presigned_url(
         ClientMethod="get_object",
-        Params={"Bucket": "project1-cmpe172", "Key": saveFileAs},
+        Params={"Bucket": "--insertBucketNameHere--", "Key": saveFileAs},
     )
     return "https://project1-cmpe172.s3.amazonaws.com/"+saveFileAs
 
