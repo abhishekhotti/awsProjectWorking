@@ -3,29 +3,185 @@ import os
 import time
 import random
 import string
-fileNameToUse = "".join(
-    random.choice(string.ascii_letters + string.digits) for i in range(12)
-)
 
-totalVisitors = ""
+fileNameToUse = ""
+from account import workingDir, bucketName
+from s3Upload import uploadFile2S3
+from awsFunctions import detect_text, getSpeech, getTranslation, transcribeAudioFile, identifySpeakers
+
+url = ""
+totalConvo = ""
 app = Flask(__name__)
 
 # fileNameToUse = ''.join(random.choice(string.ascii_letters + string.digits) for i in range(12))
 # workingDir = /Users/abhishekhotti/Desktop/SnapShot_Analyzer
 
+
 @app.route("/")
 def index():
+    for subdir, dirs, files in os.walk(workingDir+"/static/"):
+        for file in files:
+            if file.endswith(".mp3"):
+                os.remove(workingDir+"/static/"+file)
+    for subdir, dirs, files in os.walk(workingDir+"/userFiles/"):
+        for file in files:
+            os.remove(workingDir+"/userFiles/"+file)
+    global fileNameToUse
+    fileNameToUse = "".join(random.choice(string.ascii_letters + string.digits) for i in range(12))
     return redirect(url_for("chooseOne"))
+
 
 @app.route("/chooseOne")
 def chooseOne():
     return render_template("chooseOne.html")
 
-@app.route("/pickedOption", methods=['POST'])
-def pickedOption():
-    choice = request.form['pickOne']
+
+@app.route("/beta/")
+def beta():
+    for subdir, dirs, files in os.walk(workingDir+"/static/"):
+        for file in files:
+            if file.endswith(".mp3"):
+                os.remove(workingDir+"/static/"+file)
+    for subdir, dirs, files in os.walk(workingDir+"/userFiles/"):
+        for file in files:
+            os.remove(workingDir+"/userFiles/"+file)
+    global fileNameToUse
+    fileNameToUse = "".join(random.choice(string.ascii_letters + string.digits) for i in range(12))
+    return render_template("beta.html")
+
+
+@app.route("/beta/translate/")
+def translate():
+    return render_template("translate.html")
+
+@app.route("/beta/transcribe/")
+def transcribe():
+    return render_template("transcribe.html")
+
+
+@app.route("/beta/translateAudioDownload/")
+def displayAudioBeta():
+    print("here")
+    return render_template(
+        "displayTranslateAudioBeta.html", audioFile=fileNameToUse+".mp3"
+    )
+
+
+@app.route("/beta/translateVerify/", methods=["POST"])
+def verificationStep():
+    supportedVoices = {
+        "hindi": "Aditi",
+        "italian": "Bianca",
+        "arabic": "Zeina",
+        "chinese": "Zhiyu",
+        "danish": "Naja",
+        "dutch": "Lotte",
+        "french": "Mathieu",
+        "german": "Marlene",
+        "spanish": "Lupe"
+    }
+    convertedText = request.form["convertedText"]
+    convertLang = request.form["conversionLanguage"]
+    getSpeech(convertedText, supportedVoices.get(convertLang), fileNameToUse)
+    return redirect(url_for("displayAudioBeta"))
+
+@app.route("/beta/downloadTranscript", methods=["POST"])
+def downloadTranscript():
+    text = request.form["correctedText"]
+    print(text)
+    return send_file(workingDir+"/userFiles/downTranscript.txt", as_attachment=True)
+
+@app.route("/beta/transcribeAudio", methods=["POST"])
+def transcribeAudio():
+    fileType = request.form.get("uploadfile")
+    userCount = request.form["peopleCount"]
+    target = os.path.join(workingDir, "userFiles/")
+    actualFile = request.files.get("uploadfile")
+    dest = "".join([target, actualFile.filename])
+    actualFile.save(dest)
+    global url 
+    url = uploadFile2S3(dest, "abhiTest.mp3")
+    transcribeAudioFile(url, "en-US", int(userCount))
+    global totalConvo
+    totalConvo = identifySpeakers()
+    with open(workingDir+"/userFiles/downTranscript.txt", "w+") as writeFile:
+        writeFile.write(totalConvo)
+    return redirect(url_for("displayTranscript"))
+
+@app.route("/beta/transcript")
+def displayTranscript():
+    global totalConvo
+    totalConvo = totalConvo.split("\n")
+    for index, value in enumerate(totalConvo):
+        totalConvo[index] = value.split(":")
+    return render_template("displayTranscript.html", speakerNotes = totalConvo, totalCount = len(totalConvo), transcript= workingDir+"/userFiles/downTranscript.txt")
+
+@app.route("/beta/convertToLanguage", methods=["POST"])
+def convertToLanguage():
+    supportedLanguages = {
+        "hindi": "hi",
+        "italian": "it",
+        "arabic": "ar",
+        "chinese": "zh",
+        "danish": "da",
+        "dutch": "nl",
+        "french": "fr",
+        "german": "de",
+        "spanish": "es",
+    }
+    englishText = request.form["englishText"]
+    convertLang = request.form["convertInto"]
+    translation = getTranslation(englishText, supportedLanguages.get(convertLang))
+    return render_template(
+        "translatedText.html",
+        textToTranslate=englishText,
+        translatedText=translation,
+        choice=convertLang,
+    )
+
+
+@app.route("/pickBetaOption", methods=["POST"])
+def pickBetaOption():
+    choice = request.form["pickOne"]
+    if choice == "translate":
+        return redirect(url_for("translate"))
+    elif choice == "transcribe":
+        return redirect(url_for("transcribe"))
     return choice
 
+
+@app.route("/pickedOption", methods=["POST"])
+def pickedOption():
+    fileType = request.form.get("uploadfile")
+    target = os.path.join(workingDir, "userFiles/")
+    actualFile = request.files.get("uploadfile")
+    dest = "".join([target, actualFile.filename])
+    actualFile.save(dest)
+    global url
+    url = uploadFile2S3(dest, "abhiTest.jpg")
+    text = detect_text("abhiTest.jpg", bucketName)
+    return render_template("askCorrectness.html", urlS3=url, textToCheck=text.strip())
+
+
+@app.route("/submitToSpeech", methods=["POST"])
+def submitToSpeech():
+    textToTranslate = request.form["correctedText"]
+    global url
+    url = request.form['s3URL']
+    getSpeech(textToTranslate, "Joanna", fileNameToUse)
+    return redirect(url_for("displayAudio"))
+
+
+@app.route("/downloadMP3", methods=["POST"])
+def downloadMP3():
+    return send_file(workingDir + "/static/"+fileNameToUse+".mp3", as_attachment=True)
+
+
+@app.route("/displayAudio")
+def displayAudio():
+    return render_template(
+        "displayAudio.html", urlS3=url, audioFile=fileNameToUse+".mp3"
+    )
 
 
 @app.errorhandler(404)

@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <link rel="shortcut icon" href= "{{ url_for('static',filename='favicon.ico') }}"/>
+    <link rel= "stylesheet" type= "text/css" href= "{{ url_for('static',filename='styles.css') }}">
+	<title>Transcript</title>
+</head>
+<body> 
+<button><a class="navBar" href="/makeChoice">Home</a></button>
+    <div class="containerMod">  
+        <form id = 'contact' action="{{ url_for('downloadTranscript') }}" method="POST" style="margin-top: 50px;">
+            <h1 style="text-align: center;">Transcript</h1>
+            <table style="margin-bottom: 15px; margin-top: 10px;">
+                <tr>
+                    <th style="white-space: nowrap;">Speaker #:</th>
+                    <th style="text-align: center;">Sentences</th>
+                </tr>
+                {% for item in speakerNotes %}
+                    <tr>
+                        <td style="white-space: nowrap;">
+                            {{ item[0] }}
+                        </td>
+                        <td>
+                            {{item[1]}}
+                        </td>
+                    </tr>
+                {% endfor %}
+            </table>
+            <button name="submit" type="submit" id="contact-submit">Download Transcript</button>
+      </form>
+    </div>
+</body>

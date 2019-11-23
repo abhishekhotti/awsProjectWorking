@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <link rel="shortcut icon" href= "{{ url_for('static',filename='favicon.ico') }}"/>
+    <link rel= "stylesheet" type= "text/css" href= "{{ url_for('static',filename='styles.css') }}">
+	<title>Upload MP3</title>
+</head>
+<body> 
+<button><a class="navBar" href="/">Home</a></button>
+    <div class="container">  
+        <form id = 'contact' action="{{ url_for('transcribeAudio') }}" method="POST" enctype="multipart/form-data">
+        <h3 id = "pin">Upload MP3</h3>
+        <fieldset id = "pin">
+            Select the audio file (.mp3): <input type="file" name="uploadfile" accept =".mp3"/>
+        </fieldset>
+        <fieldset id = "pin">
+            <p>
+                How many people are in the convo: 
+                <select name="peopleCount">
+                        <option name = "languageChoice" disabled value = "1"> 1</option>
+                        <option name = "languageChoice" value = "2"> 2</option>
+                        <option name = "languageChoice" disabled value = "2"> >3</option>
+                    </select>
+            </p>
+        </fieldset>
+        <fieldset>
+            <button name="submit" type="submit" id="contact-submit">Submit</button>
+        </fieldset>
+      </form>
+    </div>
+</body>

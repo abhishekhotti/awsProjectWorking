@@ -7,11 +7,16 @@
 </head>
 <body> 
 <button><a class="navBar" href="/">Home</a></button>
-    <div class="container">  
-        <form id = 'contact' action="{{ url_for('pickedOption') }}" method="POST" enctype="multipart/form-data">
-        <h3 id = "pin">Upload Image</h3>
+<br>
+    <div style=" text-align: center;">  
+        <img src = {{ urlS3 }} style = "height: 300px;"></img>
+    </div>
+        <div class = "container">
+        <form id = 'contact' action="{{ url_for('submitToSpeech') }}" method="POST" enctype="multipart/form-data">
+        <h3 id = "pin">Verify</h3>
+        <input type="hidden"  name="s3URL" value= {{ urlS3 }}>
         <fieldset id = "pin">
-            Select the image with text (.png, .jpg): <input type="file" name="uploadfile" accept ="image/*"/>
+                <textarea rows="4" cols="50" name = "correctedText">{{textToCheck}}</textarea>
         </fieldset>
         <fieldset>
             <button name="submit" type="submit" id="contact-submit">Submit</button>
