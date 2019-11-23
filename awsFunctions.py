@@ -34,7 +34,7 @@ def download_file(url, file_path):
 def transcribeAudioFile(s3URL, lang, peopleCount):
     transcribe = boto3.client('transcribe', region_name="us-west-2")
     job_name = "translateTests"
-    job_uri = "https://project1-cmpe172.s3-us-west-2.amazonaws.com/abhiTest.mp3"
+    job_uri = s3URL
     transcribe.start_transcription_job(
         TranscriptionJobName=job_name,
         Media={'MediaFileUri': job_uri},
