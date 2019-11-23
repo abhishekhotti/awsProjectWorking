@@ -5,7 +5,9 @@ Course: Enterprise Software (Links to an external site.)
 
 Professor Sanjay Garje (Links to an external site.) (This is link to LinkedIn Profile)
 
-Student: Abhishek Hotti and Moo Jin Park: https://www.linkedin.com/in/moopark03/
+Student: 
+1) Abhishek Hotti (https://www.linkedin.com/in/abhishek-hotti/)
+2) Moo Jin Park (https://www.linkedin.com/in/moopark03/)
 
 Application:
 1) Recognize text in an image
