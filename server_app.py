@@ -38,6 +38,15 @@ def chooseOne():
 
 @app.route("/beta/")
 def beta():
+    for subdir, dirs, files in os.walk(workingDir+"/static/"):
+        for file in files:
+            if file.endswith(".mp3"):
+                os.remove(workingDir+"/static/"+file)
+    for subdir, dirs, files in os.walk(workingDir+"/userFiles/"):
+        for file in files:
+            os.remove(workingDir+"/userFiles/"+file)
+    global fileNameToUse
+    fileNameToUse = "".join(random.choice(string.ascii_letters + string.digits) for i in range(12))
     return render_template("beta.html")
 
 
@@ -78,18 +87,21 @@ def verificationStep():
 
 @app.route("/beta/downloadTranscript", methods=["POST"])
 def downloadTranscript():
+    text = request.form["correctedText"]
+    print(text)
     return send_file(workingDir+"/userFiles/downTranscript.txt", as_attachment=True)
 
 @app.route("/beta/transcribeAudio", methods=["POST"])
 def transcribeAudio():
     fileType = request.form.get("uploadfile")
+    userCount = request.form["peopleCount"]
     target = os.path.join(workingDir, "userFiles/")
     actualFile = request.files.get("uploadfile")
     dest = "".join([target, actualFile.filename])
     actualFile.save(dest)
     global url 
     url = uploadFile2S3(dest, "abhiTest.mp3")
-    transcribeAudioFile(url, "en-US")
+    transcribeAudioFile(url, "en-US", int(userCount))
     global totalConvo
     totalConvo = identifySpeakers()
     with open(workingDir+"/userFiles/downTranscript.txt", "w+") as writeFile:
@@ -102,7 +114,7 @@ def displayTranscript():
     totalConvo = totalConvo.split("\n")
     for index, value in enumerate(totalConvo):
         totalConvo[index] = value.split(":")
-    return render_template("displayTranscript.html", speakerNotes = totalConvo, transcript= workingDir+"/userFiles/downTranscript.txt")
+    return render_template("displayTranscript.html", speakerNotes = totalConvo, totalCount = len(totalConvo), transcript= workingDir+"/userFiles/downTranscript.txt")
 
 @app.route("/beta/convertToLanguage", methods=["POST"])
 def convertToLanguage():
