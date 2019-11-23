@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <link rel="shortcut icon" href= "{{ url_for('static',filename='favicon.ico') }}"/>
+    <link rel= "stylesheet" type= "text/css" href= "{{ url_for('static',filename='styles.css') }}">
+	<title>Upload Image</title>
+</head>
+<body> 
+<button><a class="navBar" href="/">Home</a></button>
+<br>
+        <div class = "container">
+        <form id = 'contact' action="{{ url_for('convertToLanguage') }}" method="POST" enctype="multipart/form-data">
+        <h3 id = "pin">Translation Service</h3>
+        <fieldset id = "pin">
+            <p style="text-align: left;">Type your ENGLISH sentence below:
+                <textarea style="text-align: left;" placeholder = "Type your ENGLISH sentence here...." name="englishText"></textarea>
+            </p>
+        </fieldset>
+        <fieldset id = "pin">
+            <p style="text-align: left;">What language would you like to translate into?
+                <select name="convertInto">
+                    <option name = "languageChoice" value = "arabic"> Arabic</option>
+                    <option name = "languageChoice" value = "chinese"> Chinese</option>
+                    <option name = "languageChoice" value = "danish"> Danish</option>
+                    <option name = "languageChoice" value = "dutch"> Dutch</option>
+                    <option name = "languageChoice" value = "french"> French</option>
+                    <option name = "languageChoice" value = "german"> German</option>
+                    <option name = "languageChoice" value = "hindi"> Hindi</option>
+                    <option name = "languageChoice" value = "italian"> Italian</option>
+                </select>
+            </p>
+        </fieldset>
+        <fieldset>
+            <button name="submit" type="submit" id="contact-submit">Submit</button>
+        </fieldset>
+      </form>
+      
+    </div>
+</body>

@@ -4,4 +4,6 @@ awsApp/*
 
 account.py
 
+userFiles/*
+
 __pycache__
