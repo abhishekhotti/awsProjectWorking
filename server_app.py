@@ -7,7 +7,7 @@ import string
 fileNameToUse = ""
 from account import workingDir, bucketName
 from s3Upload import uploadFile2S3
-from awsFunctions import detect_text, getSpeech, getTranslation, transcribeAudioFile, identifySpeakers
+from awsFunctions import detect_text, getSpeech, getTranslation, transcribeAudioFile, identifySpeakers, downloadJson
 
 url = ""
 totalConvo = ""
@@ -91,6 +91,21 @@ def downloadTranscript():
     print(text)
     return send_file(workingDir+"/userFiles/downTranscript.txt", as_attachment=True)
 
+@app.route("/beta/checkForJsonFile", methods=["POST"])
+def checkForJsonFile():
+    jsonFile = request.form['fileName']
+    downloadJson()
+    print("here")
+    for subdir, dirs, files in os.walk(workingDir+"/userFiles/"):
+        for file in files:
+            if file == "speech.json":
+                global totalConvo
+                totalConvo = identifySpeakers()
+                with open(workingDir+"/userFiles/downTranscript.txt", "w+") as writeFile:
+                    writeFile.write(totalConvo)
+                return redirect(url_for("displayTranscript"))
+    return redirect(url_for("doingMagic"))
+
 @app.route("/beta/transcribeAudio", methods=["POST"])
 def transcribeAudio():
     fileType = request.form.get("uploadfile")
@@ -102,11 +117,12 @@ def transcribeAudio():
     global url 
     url = uploadFile2S3(dest, "abhiTest.mp3")
     transcribeAudioFile(url, "en-US", int(userCount))
-    global totalConvo
-    totalConvo = identifySpeakers()
-    with open(workingDir+"/userFiles/downTranscript.txt", "w+") as writeFile:
-        writeFile.write(totalConvo)
-    return redirect(url_for("displayTranscript"))
+    return redirect(url_for("doingMagic"))
+    
+
+@app.route("/beta/doingMagic")
+def doingMagic():
+    return render_template("loadingPage.html", fileNameToUse = "speech.json")
 
 @app.route("/beta/transcript")
 def displayTranscript():
