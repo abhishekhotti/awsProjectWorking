@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <link rel="shortcut icon" href= "{{ url_for('static',filename='favicon.ico') }}"/>
+    <link rel= "stylesheet" type= "text/css" href= "{{ url_for('static',filename='styles.css') }}">
+	<title>Upload Image</title>
+</head>
+<script>
+    function validate(form) {
+        fileSize = form.uploadfile.files[0].size; 
+        if (fileSize > 5000000){
+            alert("Please ensure that the file size is less than 5 MB")
+            return false;
+        }
+        return true;
+    }
+</script>
+<body> 
+    <button><a class="navBar" href="/">Home</a></button>
+    <div class="container">  
+        <form id = 'contact' action="{{ url_for('uploadingImage') }}" method="POST" enctype="multipart/form-data" onsubmit="return validate(this)">
+        <h3 id = "pin">Upload Image</h3>
+        <p class="alert">
+            <b>{{fail}}</b>
+        </p>
+        <fieldset id = "pin">
+            Select the image with text (.png, .jpg):
+            <br/><b>Files should be less than 5 MB</b>
+            <input type="file" id="uploadfile" name="uploadfile" accept ="image/*"/>
+        </fieldset>
+        <fieldset>
+            <button name="submit" type="submit" id="contact-submit">Submit</button>
+        </fieldset>
+      </form>
+    </div>
+</body>

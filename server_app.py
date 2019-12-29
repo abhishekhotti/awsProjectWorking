@@ -51,7 +51,7 @@ def beta():
     return render_template("beta.html")
 
 
-@app.route("/beta/translate/")
+@app.route("/translate/")
 def translate():
     return render_template("translate.html")
 
@@ -60,7 +60,7 @@ def transcribe():
     return render_template("transcribe.html")
 
 
-@app.route("/beta/translateAudioDownload/")
+@app.route("/translateAudioDownload/")
 def displayAudioBeta():
     print("here")
     return render_template(
@@ -137,7 +137,7 @@ def displayTranscript():
         totalConvo[index] = value.split(":")
     return render_template("displayTranscript.html", speakerNotes = totalConvo, totalCount = len(totalConvo), transcript= workingDir+"/userFiles/downTranscript.txt")
 
-@app.route("/beta/convertToLanguage", methods=["POST"])
+@app.route("/convertToLanguage", methods=["POST"])
 def convertToLanguage():
     supportedLanguages = {
         "hindi": "hi",
@@ -164,15 +164,25 @@ def convertToLanguage():
 @app.route("/pickBetaOption", methods=["POST"])
 def pickBetaOption():
     choice = request.form["pickOne"]
-    if choice == "translate":
-        return redirect(url_for("translate"))
-    elif choice == "transcribe":
+    if choice == "transcribe":
         return redirect(url_for("transcribe"))
     return choice
 
+@app.route("/pickedOptionMain", methods=["POST"])
+def pickedOptionMain():
+    choice = request.form["pickOne"]
+    if choice == "translate":
+        return redirect(url_for("translate"))
+    elif choice == "imageToText":
+        return redirect(url_for("uploadImage"))
+    return choice
 
-@app.route("/pickedOption", methods=["POST"])
-def pickedOption():
+@app.route("/uploadImage/")
+def uploadImage():
+    return render_template("uploadImage.html")
+
+@app.route("/uploadingImage", methods=["POST"])
+def uploadingImage():
     target = os.path.join(workingDir, "userFiles/")
     actualFile = request.files.get("uploadfile")
     dest = "".join([target, actualFile.filename])
