@@ -48,14 +48,11 @@ def transcribeAudioFile(s3URL, lang, peopleCount):
     )
 
 def downloadJson():
-    while True:
-        transcribe = boto3.client('transcribe', region_name="us-west-2")
-        job_name = "translateTestsLocal"
-        status = transcribe.get_transcription_job(TranscriptionJobName=job_name)
-        if status['TranscriptionJob']['TranscriptionJobStatus'] in ['COMPLETED', 'FAILED']:
-            break
-        else:
-            return "failed"
+    transcribe = boto3.client('transcribe', region_name="us-west-2")
+    job_name = "translateTestsLocal"
+    status = transcribe.get_transcription_job(TranscriptionJobName=job_name)
+    if status['TranscriptionJob']['TranscriptionJobStatus'] not in ['COMPLETED', 'FAILED']:
+        return "failed"
     urlPath = status.get('TranscriptionJob').get('Transcript').get('TranscriptFileUri')
     download_file(urlPath, workingDir+"/userFiles/speech.json")
     transcribe.delete_transcription_job(TranscriptionJobName=job_name)

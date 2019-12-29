@@ -1,3 +1,4 @@
+
 from flask import Flask, render_template, request, send_file, redirect, url_for
 import os
 import time
@@ -94,8 +95,8 @@ def downloadTranscript():
 @app.route("/beta/checkForJsonFile", methods=["POST"])
 def checkForJsonFile():
     jsonFile = request.form['fileName']
-    downloadJson()
-    print("here")
+    if "failed" == downloadJson():
+        return redirect(url_for("doingMagic"))
     for subdir, dirs, files in os.walk(workingDir+"/userFiles/"):
         for file in files:
             if file == "speech.json":
@@ -104,7 +105,7 @@ def checkForJsonFile():
                 with open(workingDir+"/userFiles/downTranscript.txt", "w+") as writeFile:
                     writeFile.write(totalConvo)
                 return redirect(url_for("displayTranscript"))
-    return redirect(url_for("doingMagic"))
+    
 
 @app.route("/beta/transcribeAudio", methods=["POST"])
 def transcribeAudio():
@@ -114,7 +115,11 @@ def transcribeAudio():
     actualFile = request.files.get("uploadfile")
     dest = "".join([target, actualFile.filename])
     actualFile.save(dest)
+    fsize=os.stat(dest)
+    if fsize.st_size > 5000000:
+        return render_template("transcribe.html", fail = "Upload only a file less than 5 MB")
     global url 
+    return "done"
     url = uploadFile2S3(dest, "abhiTest.mp3")
     transcribeAudioFile(url, "en-US", int(userCount))
     return redirect(url_for("doingMagic"))
@@ -168,11 +173,13 @@ def pickBetaOption():
 
 @app.route("/pickedOption", methods=["POST"])
 def pickedOption():
-    fileType = request.form.get("uploadfile")
     target = os.path.join(workingDir, "userFiles/")
     actualFile = request.files.get("uploadfile")
     dest = "".join([target, actualFile.filename])
     actualFile.save(dest)
+    fsize=os.stat(dest)
+    if fsize.st_size > 5000000:
+        return render_template("chooseOne.html", fail = "Upload only a file less than 5 MB")
     global url
     url = uploadFile2S3(dest, "abhiTest.jpg")
     text = detect_text("abhiTest.jpg", bucketName)
@@ -199,11 +206,9 @@ def displayAudio():
         "displayAudio.html", urlS3=url, audioFile=fileNameToUse+".mp3"
     )
 
-
 @app.errorhandler(404)
 def error404(error):
     return render_template("error404.html")
-
 
 @app.errorhandler(500)
 def error500(error):
@@ -213,7 +218,6 @@ def error500(error):
 @app.errorhandler(405)
 def error405(error):
     return render_template("error404.html")
-
 
 if __name__ == "__main__":
     app.run(debug=True)
