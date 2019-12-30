@@ -25,13 +25,13 @@ app = Flask(__name__)
 
 @app.route("/")
 def index():
-    '''for subdir, dirs, files in os.walk(workingDir + "/static/"):
+    for subdir, dirs, files in os.walk(workingDir + "/static/"):
         for file in files:
             if file.endswith(".mp3"):
                 os.remove(workingDir + "/static/" + file)
     for subdir, dirs, files in os.walk(workingDir + "/userFiles/"):
         for file in files:
-            os.remove(workingDir + "/userFiles/" + file)'''
+            os.remove(workingDir + "/userFiles/" + file)
     global fileNameToUse
     fileNameToUse = "".join(
         random.choice(string.ascii_letters + string.digits) for i in range(12)
