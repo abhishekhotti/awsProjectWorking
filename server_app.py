@@ -31,8 +31,8 @@ def index():
                 os.remove(workingDir + "/static/" + file)
     for subdir, dirs, files in os.walk(workingDir + "/userFiles/"):
         for file in files:
-            os.remove(workingDir + "/userFiles/" + file)
-    global fileNameToUse'''
+            os.remove(workingDir + "/userFiles/" + file)'''
+    global fileNameToUse
     fileNameToUse = "".join(
         random.choice(string.ascii_letters + string.digits) for i in range(12)
     )
@@ -79,9 +79,50 @@ def verificationStep():
     getSpeech(convertedText, supportedVoices.get(convertLang), fileNameToUse)
     return redirect(url_for("displayAudioBeta"))
 
+@app.route("/transcript")
+def displayTranscript():
+    global totalConvo, speakerCount
+    #speakerCount = 1
+    #fileStorageDest = "hasanMP3.mp3"
+    if speakerCount > 1:
+        totalConvo = identifySpeakers()
+    else:
+        totalConvo = getSingleSpeaker()
+    with open(
+        workingDir + "/userFiles/downTranscript.txt", "w+"
+    ) as writeFile:
+        writeFile.write(totalConvo)
+
+    totalConvo = totalConvo.split("\n")
+    for index, value in enumerate(totalConvo):
+        totalConvo[index] = value.split(":")
+    NoOfSpeakers = []
+    for i in range(0,speakerCount):
+        NoOfSpeakers.append(i)
+    return render_template(
+        "displayTranscript.html",
+        speakerNotes=totalConvo,
+        totalCount=len(totalConvo),
+        transcript= workingDir + "/userFiles/downTranscript.txt",
+        audioFile = fileStorageDest,
+        speakerCount = NoOfSpeakers
+    )
 
 @app.route("/beta/downloadTranscript", methods=["POST"])
 def downloadTranscript():
+    dictionaryOfNames = {}
+    #speakerCount = 1
+    for value in range(0, speakerCount):
+        speakerName = request.form["speaker"+str(value)]
+        if speakerName != "":
+            dictionaryOfNames.update( {"Speaker "+str(value): speakerName} )
+    oldTrans = ""
+    with open(workingDir + "/userFiles/downTranscript.txt", "r") as readFile:
+        oldTrans = readFile.read()
+    for item in dictionaryOfNames:
+        oldTrans = oldTrans.replace(item, dictionaryOfNames.get(item))
+    with open(workingDir + "/userFiles/downTranscript.txt", "w") as writeFile:
+        writeFile.write(oldTrans)
     return send_file(workingDir + "/userFiles/downTranscript.txt", as_attachment=True)
 
 
@@ -123,35 +164,7 @@ def doingMagic():
     return render_template("loadingPage.html", fileNameToUse="speech.json")
 
 
-@app.route("/transcript")
-def displayTranscript():
 
-    global totalConvo, speakerCount
-    speakerCount = 1
-    fileStorageDest = "hasanMP3.mp3"
-    if speakerCount > 1:
-        totalConvo = identifySpeakers()
-    else:
-        totalConvo = getSingleSpeaker()
-    with open(
-        workingDir + "/userFiles/downTranscript.txt", "w+"
-    ) as writeFile:
-        writeFile.write(totalConvo)
-
-    totalConvo = totalConvo.split("\n")
-    for index, value in enumerate(totalConvo):
-        totalConvo[index] = value.split(":")
-    NoOfSpeakers = []
-    for i in range(0,speakerCount):
-        NoOfSpeakers.append(i)
-    return render_template(
-        "displayTranscript.html",
-        speakerNotes=totalConvo,
-        totalCount=len(totalConvo),
-        transcript= workingDir + "/userFiles/downTranscript.txt",
-        audioFile = fileStorageDest,
-        speakerCount = NoOfSpeakers
-    )
 
 
 @app.route("/convertToLanguage", methods=["POST"])

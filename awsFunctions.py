@@ -57,7 +57,7 @@ def transcribeAudioFile(s3URL, lang, peopleCount):
 
 def downloadJson():
     transcribe = boto3.client("transcribe", region_name="us-west-2")
-    job_name = "translateTestsLocal"
+    job_name = "transcribeAudioFileLocal"
     status = transcribe.get_transcription_job(TranscriptionJobName=job_name)
     if status["TranscriptionJob"]["TranscriptionJobStatus"] not in [
         "COMPLETED",
@@ -71,7 +71,7 @@ def downloadJson():
 def getSingleSpeaker():
     input_file = open(workingDir + "/userFiles/speech.json", "r")
     json_decode=json.load(input_file)
-    totalConvo = "Speaker 0:"
+    totalConvo = "Speaker 0: "
     totalConvo += json_decode.get("results").get("transcripts")[0].get("transcript")
     return totalConvo
 

@@ -11,10 +11,10 @@
         <form id = 'contact' action="{{ url_for('pickedOptionMain') }}" method="POST" enctype="multipart/form-data">
             <h3 id = "pin">Choose Option</h3>
             <fieldset id = "pin">
-                <input type="radio" name="pickOne" value="translate"> Translate<br>
+                <input type="radio" name="pickOne" value="imageToText"> Text Recognition<br>
             </fieldset>
             <fieldset id = "pin">
-                <input type="radio" name="pickOne" value="imageToText"> Text Recognition<br>
+                <input type="radio" name="pickOne" value="translate"> Text Translation<br>
             </fieldset>
             <fieldset id = "pin">
                 <input type="radio" name="pickOne" value="speechTranscribe"> Speech Transcription<br>
