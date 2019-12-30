@@ -36,15 +36,23 @@ def download_file(url, file_path):
 
 def transcribeAudioFile(s3URL, lang, peopleCount):
     transcribe = boto3.client("transcribe", region_name="us-west-2")
-    job_name = "translateTestsLocal"
+    job_name = "transcribeAudioFileLocal"
     job_uri = s3URL
-    transcribe.start_transcription_job(
-        TranscriptionJobName=job_name,
-        Media={"MediaFileUri": job_uri},
-        MediaFormat="mp3",
-        LanguageCode=lang,
-        Settings={"ShowSpeakerLabels": True, "MaxSpeakerLabels": peopleCount,},
-    )
+    if peopleCount == 1:
+        transcribe.start_transcription_job(
+            TranscriptionJobName=job_name,
+            Media={"MediaFileUri": job_uri},
+            MediaFormat="mp3",
+            LanguageCode=lang,
+        )
+    else:
+        transcribe.start_transcription_job(
+            TranscriptionJobName=job_name,
+            Media={"MediaFileUri": job_uri},
+            MediaFormat="mp3",
+            LanguageCode=lang,
+            Settings={"ShowSpeakerLabels": True, "MaxSpeakerLabels": peopleCount},
+        )
 
 
 def downloadJson():
@@ -60,6 +68,12 @@ def downloadJson():
     download_file(urlPath, workingDir + "/userFiles/speech.json")
     transcribe.delete_transcription_job(TranscriptionJobName=job_name)
 
+def getSingleSpeaker():
+    input_file = open(workingDir + "/userFiles/speech.json", "r")
+    json_decode=json.load(input_file)
+    totalConvo = "Speaker 0:"
+    totalConvo += json_decode.get("results").get("transcripts")[0].get("transcript")
+    return totalConvo
 
 def identifySpeakers():
     input_file = open(workingDir + "/userFiles/speech.json", "r")

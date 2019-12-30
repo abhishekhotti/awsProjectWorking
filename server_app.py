@@ -4,7 +4,6 @@ import time
 import random
 import string
 
-fileNameToUse = ""
 from account import workingDir, bucketName
 from s3Upload import uploadFile2S3
 from awsFunctions import (
@@ -14,10 +13,10 @@ from awsFunctions import (
     transcribeAudioFile,
     identifySpeakers,
     downloadJson,
+    getSingleSpeaker,
 )
 
-url = ""
-totalConvo = ""
+url = speakerCount = totalConvo = fileStorageDest = fileNameToUse = ""
 app = Flask(__name__)
 
 # fileNameToUse = ''.join(random.choice(string.ascii_letters + string.digits) for i in range(12))
@@ -26,14 +25,14 @@ app = Flask(__name__)
 
 @app.route("/")
 def index():
-    for subdir, dirs, files in os.walk(workingDir + "/static/"):
+    '''for subdir, dirs, files in os.walk(workingDir + "/static/"):
         for file in files:
             if file.endswith(".mp3"):
                 os.remove(workingDir + "/static/" + file)
     for subdir, dirs, files in os.walk(workingDir + "/userFiles/"):
         for file in files:
             os.remove(workingDir + "/userFiles/" + file)
-    global fileNameToUse
+    global fileNameToUse'''
     fileNameToUse = "".join(
         random.choice(string.ascii_letters + string.digits) for i in range(12)
     )
@@ -57,7 +56,6 @@ def transcribe():
 
 @app.route("/translateAudioDownload/")
 def displayAudioBeta():
-    print("here")
     return render_template(
         "displayTranslateAudioBeta.html", audioFile=fileNameToUse + ".mp3"
     )
@@ -95,12 +93,6 @@ def checkForJsonFile():
     for subdir, dirs, files in os.walk(workingDir + "/userFiles/"):
         for file in files:
             if file == "speech.json":
-                global totalConvo
-                totalConvo = identifySpeakers()
-                with open(
-                    workingDir + "/userFiles/downTranscript.txt", "w+"
-                ) as writeFile:
-                    writeFile.write(totalConvo)
                 return redirect(url_for("displayTranscript"))
 
 
@@ -108,17 +100,20 @@ def checkForJsonFile():
 def transcribeAudio():
     fileType = request.form.get("uploadfile")
     userCount = request.form["peopleCount"]
-    target = os.path.join(workingDir, "userFiles/")
+    target = os.path.join(workingDir, "static/")
     actualFile = request.files.get("uploadfile")
     dest = "".join([target, actualFile.filename])
     actualFile.save(dest)
+    global fileStorageDest
+    fileStorageDest = actualFile.filename
     fsize = os.stat(dest)
     if fsize.st_size > 5000000:
         return render_template(
             "transcribe.html", fail="Upload only a file less than 5 MB"
         )
-    global url
+    global url, speakerCount
     url = uploadFile2S3(dest, "abhiTest.mp3")
+    speakerCount = int(userCount)
     transcribeAudioFile(url, "en-US", int(userCount))
     return redirect(url_for("doingMagic"))
 
@@ -130,15 +125,32 @@ def doingMagic():
 
 @app.route("/transcript")
 def displayTranscript():
-    global totalConvo
+
+    global totalConvo, speakerCount
+    speakerCount = 1
+    fileStorageDest = "hasanMP3.mp3"
+    if speakerCount > 1:
+        totalConvo = identifySpeakers()
+    else:
+        totalConvo = getSingleSpeaker()
+    with open(
+        workingDir + "/userFiles/downTranscript.txt", "w+"
+    ) as writeFile:
+        writeFile.write(totalConvo)
+
     totalConvo = totalConvo.split("\n")
     for index, value in enumerate(totalConvo):
         totalConvo[index] = value.split(":")
+    NoOfSpeakers = []
+    for i in range(0,speakerCount):
+        NoOfSpeakers.append(i)
     return render_template(
         "displayTranscript.html",
         speakerNotes=totalConvo,
         totalCount=len(totalConvo),
-        transcript=workingDir + "/userFiles/downTranscript.txt",
+        transcript= workingDir + "/userFiles/downTranscript.txt",
+        audioFile = fileStorageDest,
+        speakerCount = NoOfSpeakers
     )
 
 

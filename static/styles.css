@@ -230,13 +230,10 @@
   #contact input[type="url"], 
   #contact input[type="password"], 
   #contact textarea { 
-    width: 100%; 
     border: 1px solid #ccc; 
     background: #fff; 
-    text-align: center; 
     margin: 0 0 5px; 
     padding: 10px; 
-    display: block; 
   } 
    
   #contact input[type="text"]:hover, 

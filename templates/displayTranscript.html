@@ -1,15 +1,15 @@
 <!DOCTYPE html>
-<html>
 <head>
     <link rel="shortcut icon" href= "{{ url_for('static',filename='favicon.ico') }}"/>
     <link rel= "stylesheet" type= "text/css" href= "{{ url_for('static',filename='styles.css') }}">
 	<title>Transcript</title>
 </head>
 <body> 
-<button><a class="navBar" href="/makeChoice">Home</a></button>
+<button><a class="navBar" href="/">Home</a></button>
     <div class="containerMod">  
         <form id = 'contact' action="{{ url_for('downloadTranscript') }}" method="POST" style="margin-top: 50px;">
-            <h1 style="text-align: center;">Transcript</h1>
+            <h1 style="text-align: center;">Transcript</br>
+            <audio controls src="{{ url_for('static', filename = audioFile) }}" type="audio/mp3"></audio></h1>
             <table style="margin-bottom: 15px; margin-top: 10px;">
                 <tr>
                     <th style="white-space: nowrap;">Speaker #:</th>
@@ -26,6 +26,10 @@
                     </tr>
                 {% endfor %}
             </table>
+            {% for item in speakerCount %}
+                Name of Speaker {{item}}:
+                <input type="text" name="speaker{{item}}" placeholder="Enter Name"></input>
+            {% endfor %}
             <button name="submit" type="submit" id="contact-submit">Download Transcript</button>
       </form>
     </div>
