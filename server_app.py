@@ -252,16 +252,5 @@ def displayAudio():
 def error404(error):
     return render_template("error404.html")
 
-
-@app.errorhandler(500)
-def error500(error):
-    return render_template("reportError.html")
-
-
-@app.errorhandler(405)
-def error405(error):
-    return render_template("error404.html")
-
-
 if __name__ == "__main__":
     app.run(debug=True)
