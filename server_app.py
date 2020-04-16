@@ -3,6 +3,7 @@ import os
 import time
 import random
 import string
+from flask_cors import CORS
 
 from account import workingDir, bucketName
 from s3Upload import uploadFile2S3
@@ -18,7 +19,7 @@ from awsFunctions import (
 
 url = speakerCount = totalConvo = fileStorageDest = fileNameToUse = ""
 app = Flask(__name__)
-
+CORS(app)
 # fileNameToUse = ''.join(random.choice(string.ascii_letters + string.digits) for i in range(12))
 # workingDir = /Users/abhishekhotti/Desktop/SnapShot_Analyzer
 
@@ -155,16 +156,20 @@ def transcribeAudio():
     global url, speakerCount
     url = uploadFile2S3(dest, "abhiTest.mp3")
     speakerCount = int(userCount)
-    transcribeAudioFile(url, "en-US", int(userCount))
+    languageChosen = request.form["language"]
+    if languageChosen == "eng":
+        languageChosen = "en-US"
+    elif languageChosen == "jap":
+        languageChosen = "ja-JP"
+    else:
+        return "How did you break my system?"
+    transcribeAudioFile(url, languageChosen, int(userCount))
     return redirect(url_for("doingMagic"))
 
 
 @app.route("/doingMagic")
 def doingMagic():
     return render_template("loadingPage.html", fileNameToUse="speech.json")
-
-
-
 
 
 @app.route("/convertToLanguage", methods=["POST"])
@@ -207,11 +212,20 @@ def pickedOptionMain():
 def uploadImage():
     return render_template("uploadImage.html")
 
+# @app.route("/testing", methods=["POST", "GET"])
+# def testing():
+#     print("data got posted")
+#     print(request.form)
+#     return "pottao"
 
 @app.route("/uploadingImage", methods=["POST"])
 def uploadingImage():
     target = os.path.join(workingDir, "userFiles/")
     actualFile = request.files.get("uploadfile")
+    try:
+        actualFile.fileName
+    except:
+        actualFile = request.files.get('file')
     dest = "".join([target, actualFile.filename])
     actualFile.save(dest)
     fsize = os.stat(dest)
@@ -222,6 +236,7 @@ def uploadingImage():
     global url
     url = uploadFile2S3(dest, "abhiTest.jpg")
     text = detect_text("abhiTest.jpg", bucketName)
+    return "done"
     return render_template("askCorrectness.html", urlS3=url, textToCheck=text.strip())
 
 
